@@ -1,0 +1,50 @@
+services:
+  backend:
+    build:
+      context: ./back
+    container_name: saxo-back
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./back:/app
+    environment:
+      PGUSER: ${PGUSER}
+      PGPASSWORD: ${PGPASSWORD}
+      PGHOST: ${PGHOST}
+      PGDATABASE: ${PGDATABASE}
+      PGPORT: ${PGPORT}
+    depends_on:
+      - postgres
+
+
+  frontend:
+    build:
+      context: ./front
+    container_name: saxo-front
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./front:/app
+      - /app/node_modules
+    command: npm run dev
+
+
+  # Pour faire fonctionner Nginx en dev avec build statique,
+  # il faut créer un autre service 'frontend-nginx' si besoin
+
+  postgres:
+    image: postgres:17
+    container_name: saxo-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${PGUSER}
+      POSTGRES_PASSWORD: ${PGPASSWORD}
+      POSTGRES_DB: ${PGDATABASE}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./back/initdb:/docker-entrypoint-initdb.d/
+    ports:
+      - "5432:5432"
+
+volumes:
+  pgdata:

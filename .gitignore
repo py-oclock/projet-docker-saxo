@@ -1,0 +1,19 @@
+.env
+
+# Backend
+back/node_modules/
+back/.env
+
+# Frontend
+front/node_modules/
+front/dist/
+front/.env
+
+# Docker
+pgdata/
+*.log
+
+# IDE
+.vscode/
+.idea/
+.DS_Store
